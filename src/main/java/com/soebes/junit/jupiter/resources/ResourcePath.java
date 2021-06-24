@@ -21,10 +21,8 @@ package com.soebes.junit.jupiter.resources;
 
 import org.apiguardian.api.API;
 
-import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -62,63 +60,25 @@ public class ResourcePath {
   }
 
   public Stream<String> lines(String name) {
-    URL resource = this.classLoader.getResource(name);
-    if (resource == null) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' couldn't being found.", name));
-    }
-    try {
-      return Files.lines(Paths.get(resource.getFile()));
-    } catch (IOException e) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' cound not being read.", name), e);
-    }
+    return new ResourceLoader(this.classLoader, name, "UTF-8").asStream();
   }
 
   public Stream<String> lines(String name, Charset cs) {
-    URL resource = this.classLoader.getResource(name);
-    if (resource == null) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' couldn't being found.", name));
-    }
-    try {
-      return Files.lines(Paths.get(resource.getFile()), cs);
-    } catch (IOException e) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' cound not being read.", name), e);
-    }
+    return new ResourceLoader(this.classLoader, name, cs.name()).asStream();
   }
 
   public List<String> readAllLines(String name) {
-    URL resource = this.classLoader.getResource(name);
-    if (resource == null) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' couldn't being found.", name));
-    }
-    try {
-      return Files.readAllLines(Paths.get(resource.getFile()));
-    } catch (IOException e) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' cound not being read.", name), e);
-    }
+    return new ResourceLoader(this.classLoader, name, "UTF-8").asList();
   }
 
   public List<String> readAllLines(String name, Charset cs) {
-    URL resource = this.classLoader.getResource(name);
-    if (resource == null) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' couldn't being found.", name));
-    }
-    try {
-      return Files.readAllLines(Paths.get(resource.getFile()), cs);
-    } catch (IOException e) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' cound not being read.", name), e);
-    }
+    return new ResourceLoader(this.classLoader, name, cs.name()).asList();
   }
 
   public byte[] readAllBytes(String name) {
-    URL resource = this.classLoader.getResource(name);
-    if (resource == null) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' couldn't being found.", name));
-    }
-    try {
-      return Files.readAllBytes(Paths.get(resource.getFile()));
-    } catch (IOException e) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' cound not being read.", name), e);
-    }
+    //Hint: The given encoding is being ignored, because reading a file as byte
+    //has no encoding.
+    return new ResourceLoader(this.classLoader, name, "UTF-8").asBytes();
   }
 
 }

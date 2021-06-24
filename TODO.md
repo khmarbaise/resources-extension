@@ -15,21 +15,29 @@ I should try to test things like:
     }
 
     @Test
+    void name(@ResourceRead("sub/anton.txt") byte[] resource) {
+    assertThat(resource).isEqualTo(new byte[]{0x10, 0x20});
+    }
+    
+
+    @Test
     @ResourceFile("sub/anton.txt")
     void name(byte[] content) {
 
     }
 
     @ParameterizedTest
-    @FileResourcesSource("first", "second", "third")
+    @ResourcesSource("first", "second", "third")
     void check_for_content(ResourceContentLines lines) {
       ....
     }
 
     @ParameterizedTest
-    @FileResourcesSource(directory = "src/test/resources/content") // All files from
+    @ResourcesSource(directory = "src/test/resources/content") // All files from
     void check_for_content(ResourceContentLines lines) {
       ....
     }
+    
+    
   }
 ```

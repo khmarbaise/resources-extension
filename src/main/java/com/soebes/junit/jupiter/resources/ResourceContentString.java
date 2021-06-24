@@ -35,7 +35,6 @@ public class ResourceContentString {
 
   ResourceContentString(String content) {
     this.content = content;
-    // ?
   }
 
   public String getContent() {

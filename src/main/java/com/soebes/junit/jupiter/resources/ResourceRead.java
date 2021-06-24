@@ -27,7 +27,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.nio.charset.Charset;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 @Target({ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
@@ -40,5 +42,11 @@ public @interface ResourceRead {
 
   String encoding() default "UTF-8";
 
+  /**
+   * @return The resource
+   * @deprecated Will be removed with Release 0.3.0
+   */
+  @Deprecated
+  @API(status = DEPRECATED, since = "0.2.0")
   String resource() default "";
 }

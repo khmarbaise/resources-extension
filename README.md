@@ -76,6 +76,21 @@ class XYZTest {
   void resource_with_annotated_parameters(@ResourceRead("sub/anton.txt") ResourceContentLines resource) {
     assertThat(resource.getContent()).containsExactly("Anton.txt in sub. Line 1", "Anton.txt in sub. Line 2");
   }
+
+  @Test
+  void resource_with_annotated_parameters(@ResourceRead("sub/anton.txt") String resource) {
+    assertThat(resource).isEqualTo("Anton.txt in sub. Line 1" + "\n" + "Anton.txt in sub. Line 2");
+  }
+
+  @Test
+  void resource_with_annotated_parameters(@ResourceRead("sub/anton.txt") List<String> resource) {
+    assertThat(resource).containsExactly("Anton.txt in sub. Line 1", "Anton.txt in sub. Line 2");
+  }
+
+  @Test
+  void resource_with_annotated_parameters(@ResourceRead("sub/anton.txt") Stream<String> resource) {
+    assertThat(resource).containsExactly("Anton.txt in sub. Line 1", "Anton.txt in sub. Line 2");
+  }
   
 }
 

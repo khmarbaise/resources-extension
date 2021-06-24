@@ -35,7 +35,6 @@ public class ResourceContentLines {
 
   ResourceContentLines(List<String> content) {
     this.content = content;
-    // ?
   }
 
   public List<String> getContent() {
