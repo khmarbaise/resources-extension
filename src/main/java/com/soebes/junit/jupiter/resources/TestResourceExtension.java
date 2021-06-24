@@ -92,15 +92,21 @@ class TestResourceExtension implements ParameterResolver {
     Class<?> type = parameterContext.getParameter().getType();
     if (type.equals(ResourceContentLines.class) || type.equals(ResourceContentString.class)) {
       Method requiredTestMethod = extensionContext.getRequiredTestMethod();
-      // @ResourceFileRead("sub/anton.txt") must be present!
-      if (!requiredTestMethod.isAnnotationPresent(ResourceRead.class)) {
+      // @ResourceFileRead("sub/anton.txt") must be present! either as annotation on the method
+      // or as annotation on the method parameter.
+      if (!requiredTestMethod.isAnnotationPresent(ResourceRead.class) && !parameterContext.getParameter().isAnnotationPresent(ResourceRead.class)) {
         // Fail!!!
-        throw new IllegalStateException("XXXX");
+        throw new IllegalStateException("@ResourceRead not given on method nor on method parameter.");
       }
 
-      ResourceRead annotation = requiredTestMethod.getAnnotation(ResourceRead.class);
+      ResourceRead annotation;
+      if (parameterContext.getParameter().isAnnotationPresent(ResourceRead.class)) {
+        annotation = parameterContext.getParameter().getAnnotation(ResourceRead.class);
+      } else {
+        annotation = requiredTestMethod.getAnnotation(ResourceRead.class);
+      }
 
-      if (type.equals(ResourceContentLines.class)) {
+      if (type.equals(ResourceContentLines.class) || type.isAnnotationPresent(ResourceRead.class)) {
         List<String> strings = readResource(classLoader, annotation.value());
         return new ResourceContentLines(strings);
       } else {

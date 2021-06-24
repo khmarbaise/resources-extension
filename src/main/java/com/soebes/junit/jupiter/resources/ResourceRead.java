@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = EXPERIMENTAL, since = "0.1.0")

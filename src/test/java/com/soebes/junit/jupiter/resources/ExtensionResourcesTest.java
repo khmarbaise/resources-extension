@@ -41,4 +41,9 @@ class ExtensionResourcesTest {
     assertThat(resource.getContent()).isEqualTo("Anton.txt in sub. Line 1" + "\n" + "Anton.txt in sub. Line 2");
   }
 
+  @Test
+  void resource_with_annotated_parameters(@ResourceRead("sub/anton.txt") ResourceContentLines resource) {
+    assertThat(resource.getContent()).containsExactly("Anton.txt in sub. Line 1", "Anton.txt in sub. Line 2");
+  }
+
 }
