@@ -47,7 +47,7 @@ class ExtensionTest {
     void resource_path_sub(ResourcePath resource) throws IOException {
       Path rf = resource.get("sub/anton.txt");
       List<String> lines = Files.lines(rf).collect(Collectors.toList());
-      assertThat(lines).containsExactly("Anton.txt in sub.");
+      assertThat(lines).containsExactly("Anton.txt in sub. Line 1", "Anton.txt in sub. Line 2");
     }
 
     @Test
@@ -103,7 +103,7 @@ class ExtensionTest {
 
       try (BufferedReader reader = new BufferedReader(new FileReader(rf))) {
         String currentLine = reader.readLine();
-        assertThat(currentLine).isEqualTo("Anton.txt in sub.");
+        assertThat(currentLine).isEqualTo("Anton.txt in sub. Line 1");
       }
     }
 
