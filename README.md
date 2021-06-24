@@ -18,10 +18,8 @@
 
 [![Apache License, Version 2.0, January 2004](https://img.shields.io/github/license/apache/maven.svg?label=License)][license]
 [![Build Status](https://cloud.drone.io/api/badges/khmarbaise/resources-extension/status.svg)](https://cloud.drone.io/khmarbaise/resources-extension)
-[![Site](https://github.com/khmarbaise/resources-extension/workflows/SitePublishing/badge.svg)][published-site]
 [![Issues](https://img.shields.io/github/issues/khmarbaise/resources-extension)](https://github.com/khmarbaise/resources-extension/issues)
 [![Issues Closed](https://img.shields.io/github/issues-closed/khmarbaise/resources-extension)](https://github.com/khmarbaise/resources-extension/issues?q=is%3Aissue+is%3Aclosed)
-[![codecov](https://codecov.io/gh/khmarbaise/resources-extension/branch/master/graph/badge.svg?token=DLPH6544C0)](https://codecov.io/gh/khmarbaise/resources-extension)
 
 # State
 
@@ -115,3 +113,4 @@ The whole project can be built via:
 mvn clean verify
 ```
 
+[license]: https://www.apache.org/licenses/LICENSE-2.0
