@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
  * @author Karl Heinz Marbaise
  */
 @TestResources
-class ExtensionPathTest {
+class ExtensionResourcesTest {
 
   @Test
   @ResourceRead("sub/anton.txt")
