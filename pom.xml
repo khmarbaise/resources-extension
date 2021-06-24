@@ -53,7 +53,6 @@
 
     <maven.compiler.target>8</maven.compiler.target>
     <maven.compiler.source>8</maven.compiler.source>
-    <maven.compiler.release>8</maven.compiler.release>
     <smpp.component>resources-extension</smpp.component>
     <!--
      ! Currently javadoc fails based on module without test sources
