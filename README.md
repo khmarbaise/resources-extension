@@ -62,14 +62,19 @@ class XYZTest {
 
   @Test
   @ResourceRead("sub/anton.txt")
-  void resource_from_file_as_lines_of_content(ResourceContentLines resource) {
-    resource.getContent().forEach(s -> System.out.println("s = " + s));
+  void resource_from_file_as_line_content(ResourceContentLines resource) {
+    assertThat(resource.getContent()).containsExactly("Anton.txt in sub. Line 1", "Anton.txt in sub. Line 2");
   }
 
   @Test
   @ResourceRead("sub/anton.txt")
   void resource_from_file_as_string(ResourceContentString resource) {
-    System.out.println("content = " + resource.getContent());
+    assertThat(resource.getContent()).isEqualTo("Anton.txt in sub. Line 1" + "\n" + "Anton.txt in sub. Line 2");
+  }
+
+  @Test
+  void resource_with_annotated_parameters(@ResourceRead("sub/anton.txt") ResourceContentLines resource) {
+    assertThat(resource.getContent()).containsExactly("Anton.txt in sub. Line 1", "Anton.txt in sub. Line 2");
   }
   
 }
@@ -92,7 +97,7 @@ class XYZTest {
     <dependency>
       <groupId>com.soebes.junit.jupiter.extension.resource</groupId>
       <artifactId>resources-extension</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>0.1.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
