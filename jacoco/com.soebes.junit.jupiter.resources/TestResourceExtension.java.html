@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TestResourceExtension.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">resources-extension</a> &gt; <a href="index.source.html" class="el_package">com.soebes.junit.jupiter.resources</a> &gt; <span class="el_source">TestResourceExtension.java</span></div><h1>TestResourceExtension.java</h1><pre class="source lang-java linenums">package com.soebes.junit.jupiter.resources;
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
+/**
+ * @author Karl Heinz Marbaise
+ */
+<span class="fc" id="L37">class TestResourceExtension implements ParameterResolver {</span>
+
+  @Override
+  public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+      throws ParameterResolutionException {
+
+<span class="fc" id="L43">    Class&lt;?&gt; type = parameterContext.getParameter().getType();</span>
+
+    //Need to check existence of annotation @ResourceFileRead
+<span class="fc bfc" id="L46" title="All 4 branches covered.">    if (type.equals(ResourceContentLines.class) || type.equals(ResourceContentString.class)) {</span>
+<span class="fc" id="L47">      return true;</span>
+    }
+
+<span class="fc bfc" id="L50" title="All 2 branches covered.">    if (type.equals(ResourceFile.class)) {</span>
+<span class="fc" id="L51">      return true;</span>
+    }
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">    if (type.equals(ResourcePath.class)) {</span>
+<span class="fc" id="L54">      return true;</span>
+    }
+
+<span class="nc" id="L57">    return false;</span>
+  }
+
+  private List&lt;String&gt; readResource(ClassLoader classLoader, String resourceName) {
+<span class="fc" id="L61">    URL resource = classLoader.getResource(resourceName);</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">    if (resource == null) {</span>
+<span class="nc" id="L63">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' couldn't being found.&quot;, resourceName));</span>
+    }
+    try {
+<span class="fc" id="L66">      return Files.readAllLines(Paths.get(resource.getFile()));</span>
+<span class="nc" id="L67">    } catch (IOException e) {</span>
+<span class="nc" id="L68">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' cound not being read.&quot;, resourceName), e);</span>
+    }
+
+  }
+
+  private String readResourceAsString(ClassLoader classLoader, String resourceName) {
+<span class="fc" id="L74">    URL resource = classLoader.getResource(resourceName);</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">    if (resource == null) {</span>
+<span class="nc" id="L76">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' couldn't being found.&quot;, resourceName));</span>
+    }
+    try {
+<span class="fc" id="L79">      return new String(Files.readAllBytes(Paths.get(resource.getFile())));</span>
+<span class="nc" id="L80">    } catch (IOException e) {</span>
+<span class="nc" id="L81">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' cound not being read.&quot;, resourceName), e);</span>
+    }
+
+  }
+
+  @Override
+  public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+      throws ParameterResolutionException {
+
+<span class="fc" id="L90">    ClassLoader classLoader = extensionContext.getRequiredTestInstance().getClass().getClassLoader();</span>
+
+<span class="fc" id="L92">    Class&lt;?&gt; type = parameterContext.getParameter().getType();</span>
+<span class="fc bfc" id="L93" title="All 4 branches covered.">    if (type.equals(ResourceContentLines.class) || type.equals(ResourceContentString.class)) {</span>
+<span class="fc" id="L94">      Method requiredTestMethod = extensionContext.getRequiredTestMethod();</span>
+      // @ResourceFileRead(&quot;sub/anton.txt&quot;) must be present! either as annotation on the method
+      // or as annotation on the method parameter.
+<span class="pc bpc" id="L97" title="1 of 4 branches missed.">      if (!requiredTestMethod.isAnnotationPresent(ResourceRead.class) &amp;&amp; !parameterContext.getParameter().isAnnotationPresent(ResourceRead.class)) {</span>
+        // Fail!!!
+<span class="nc" id="L99">        throw new IllegalStateException(&quot;@ResourceRead not given on method nor on method parameter.&quot;);</span>
+      }
+
+      ResourceRead annotation;
+<span class="fc bfc" id="L103" title="All 2 branches covered.">      if (parameterContext.getParameter().isAnnotationPresent(ResourceRead.class)) {</span>
+<span class="fc" id="L104">        annotation = parameterContext.getParameter().getAnnotation(ResourceRead.class);</span>
+      } else {
+<span class="fc" id="L106">        annotation = requiredTestMethod.getAnnotation(ResourceRead.class);</span>
+      }
+
+<span class="pc bpc" id="L109" title="1 of 4 branches missed.">      if (type.equals(ResourceContentLines.class) || type.isAnnotationPresent(ResourceRead.class)) {</span>
+<span class="fc" id="L110">        List&lt;String&gt; strings = readResource(classLoader, annotation.value());</span>
+<span class="fc" id="L111">        return new ResourceContentLines(strings);</span>
+      } else {
+<span class="fc" id="L113">        String strings = readResourceAsString(classLoader, annotation.value());</span>
+<span class="fc" id="L114">        return new ResourceContentString(strings);</span>
+      }
+    }
+
+<span class="fc bfc" id="L118" title="All 2 branches covered.">    if (type.equals(ResourceFile.class)) {</span>
+<span class="fc" id="L119">      return new ResourceFile(classLoader);</span>
+    }
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">    if (type.equals(ResourcePath.class)) {</span>
+<span class="fc" id="L122">      return new ResourcePath(classLoader);</span>
+    }
+<span class="nc" id="L124">    return null;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

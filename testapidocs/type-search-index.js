@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"com.soebes.junit.jupiter.resources","l":"ExtensionResourcesTest"},{"p":"com.soebes.junit.jupiter.resources","l":"ExtensionTest"},{"p":"com.soebes.junit.jupiter.resources","l":"ExtensionTest.FileTest"},{"p":"com.soebes.junit.jupiter.resources","l":"ExtensionTest.PathTest"}]
