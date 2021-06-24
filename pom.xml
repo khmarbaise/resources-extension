@@ -32,13 +32,13 @@
 
   <groupId>com.soebes.junit.jupiter.extensions.resources</groupId>
   <artifactId>resources-extension</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1-SNAPSHOT</version>
 
   <scm>
     <connection>scm:git:https://github.com/khmarbaise/resources-extension.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/khmarbaise/resources-extension.git</developerConnection>
     <url>https://github.com/khmarbaise/resources-extension</url>
-    <tag>resources-extension-0.1.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>
