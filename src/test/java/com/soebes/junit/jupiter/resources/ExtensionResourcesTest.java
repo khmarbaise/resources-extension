@@ -21,6 +21,8 @@ package com.soebes.junit.jupiter.resources;
 
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author Karl Heinz Marbaise
  */
@@ -30,13 +32,13 @@ class ExtensionResourcesTest {
   @Test
   @ResourceRead("sub/anton.txt")
   void resource_from_file_as_line_content(ResourceContentLines resource) {
-    resource.getContent().forEach(s -> System.out.println("s = " + s));
+    assertThat(resource.getContent()).containsExactly("Anton.txt in sub. Line 1", "Anton.txt in sub. Line 2");
   }
 
   @Test
   @ResourceRead("sub/anton.txt")
   void resource_from_file_as_string(ResourceContentString resource) {
-    System.out.println("content = " + resource.getContent());
+    assertThat(resource.getContent()).isEqualTo("Anton.txt in sub. Line 1" + "\n" + "Anton.txt in sub. Line 2");
   }
 
 }

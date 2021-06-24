@@ -10,6 +10,12 @@ I should try to test things like:
     }
     @Test
     @ResourceFile("sub/anton.txt")
+    void name(Stream<String> lines) {
+    //?? 
+    }
+
+    @Test
+    @ResourceFile("sub/anton.txt")
     void name(byte[] content) {
 
     }
