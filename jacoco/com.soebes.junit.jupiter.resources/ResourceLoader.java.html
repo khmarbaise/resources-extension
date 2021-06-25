@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResourceLoader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">resources-extension</a> &gt; <a href="index.source.html" class="el_package">com.soebes.junit.jupiter.resources</a> &gt; <span class="el_source">ResourceLoader.java</span></div><h1>ResourceLoader.java</h1><pre class="source lang-java linenums">package com.soebes.junit.jupiter.resources;
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Stream;
+
+/**
+ * @author Karl Heinz Marbaise
+ */
+class ResourceLoader {
+
+  private final ClassLoader classLoader;
+  private final String resourceName;
+  private final Charset encoding;
+
+<span class="fc" id="L40">  ResourceLoader(ClassLoader classLoader, String resourceName, String encoding) {</span>
+<span class="fc" id="L41">    this.classLoader = classLoader;</span>
+<span class="fc" id="L42">    this.resourceName = resourceName;</span>
+<span class="fc" id="L43">    this.encoding = Charset.forName(encoding);</span>
+<span class="fc" id="L44">  }</span>
+
+  List&lt;String&gt; asList() {
+<span class="fc" id="L47">    URL resource = getResource(this.classLoader, this.resourceName);</span>
+    try {
+<span class="fc" id="L49">      return Files.readAllLines(getResourcePath(resource), this.encoding);</span>
+<span class="nc" id="L50">    } catch (IOException e) {</span>
+<span class="nc" id="L51">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' could not read.&quot;, this.resourceName), e);</span>
+    }
+  }
+
+  Stream&lt;String&gt; asStream() {
+<span class="fc" id="L56">    URL resource = getResource(this.classLoader, this.resourceName);</span>
+    try {
+<span class="fc" id="L58">      return Files.lines(getResourcePath(resource), this.encoding);</span>
+<span class="nc" id="L59">    } catch (IOException e) {</span>
+<span class="nc" id="L60">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' could not read.&quot;, this.resourceName), e);</span>
+    }
+  }
+
+  String asString() {
+<span class="fc" id="L65">    URL resource = getResource(this.classLoader, this.resourceName);</span>
+    try {
+<span class="fc" id="L67">      return new String(Files.readAllBytes(getResourcePath(resource)));</span>
+<span class="nc" id="L68">    } catch (IOException e) {</span>
+<span class="nc" id="L69">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' could not read.&quot;, this.resourceName), e);</span>
+    }
+  }
+
+  byte[] asBytes() {
+<span class="nc" id="L74">    URL resource = getResource(this.classLoader, this.resourceName);</span>
+    try {
+<span class="nc" id="L76">      return Files.readAllBytes(getResourcePath(resource));</span>
+<span class="nc" id="L77">    } catch (IOException e) {</span>
+<span class="nc" id="L78">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' could not read.&quot;, this.resourceName), e);</span>
+    }
+  }
+
+  private Path getResourcePath(URL resource) {
+<span class="fc" id="L83">    return Paths.get(resource.getFile());</span>
+  }
+
+  private URL getResource(ClassLoader classLoader, String resourceName) {
+<span class="fc" id="L87">    URL resource = classLoader.getResource(resourceName);</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">    if (resource == null) {</span>
+<span class="nc" id="L89">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' could not found.&quot;, resourceName));</span>
+    }
+<span class="fc" id="L91">    return resource;</span>
+  }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

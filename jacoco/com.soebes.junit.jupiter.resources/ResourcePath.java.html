@@ -21,10 +21,8 @@
 
 import org.apiguardian.api.API;
 
-import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -40,12 +38,12 @@ public class ResourcePath {
 
   private final ClassLoader classLoader;
 
-<span class="fc" id="L43">  ResourcePath(ClassLoader classLoader) {</span>
-<span class="fc" id="L44">    this.classLoader = classLoader;</span>
-<span class="fc" id="L45">  }</span>
+<span class="fc" id="L41">  ResourcePath(ClassLoader classLoader) {</span>
+<span class="fc" id="L42">    this.classLoader = classLoader;</span>
+<span class="fc" id="L43">  }</span>
 
   ClassLoader getClassLoader() {
-<span class="nc" id="L48">    return classLoader;</span>
+<span class="nc" id="L46">    return classLoader;</span>
   }
 
   /**
@@ -54,71 +52,33 @@ public class ResourcePath {
    * @throws ResourceNotFoundException in case of trying to access a resource which does not exist.
    */
   public Path get(String name) {
-<span class="fc" id="L57">    URL resource = this.classLoader.getResource(name);</span>
-<span class="fc bfc" id="L58" title="All 2 branches covered.">    if (resource == null) {</span>
-<span class="fc" id="L59">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' couldn't being found.&quot;, name));</span>
+<span class="fc" id="L55">    URL resource = this.classLoader.getResource(name);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">    if (resource == null) {</span>
+<span class="fc" id="L57">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' couldn't being found.&quot;, name));</span>
     }
-<span class="fc" id="L61">    return Paths.get(resource.getFile());</span>
+<span class="fc" id="L59">    return Paths.get(resource.getFile());</span>
   }
 
   public Stream&lt;String&gt; lines(String name) {
-<span class="nc" id="L65">    URL resource = this.classLoader.getResource(name);</span>
-<span class="nc bnc" id="L66" title="All 2 branches missed.">    if (resource == null) {</span>
-<span class="nc" id="L67">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' couldn't being found.&quot;, name));</span>
-    }
-    try {
-<span class="nc" id="L70">      return Files.lines(Paths.get(resource.getFile()));</span>
-<span class="nc" id="L71">    } catch (IOException e) {</span>
-<span class="nc" id="L72">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' cound not being read.&quot;, name), e);</span>
-    }
+<span class="nc" id="L63">    return new ResourceLoader(this.classLoader, name, &quot;UTF-8&quot;).asStream();</span>
   }
 
   public Stream&lt;String&gt; lines(String name, Charset cs) {
-<span class="nc" id="L77">    URL resource = this.classLoader.getResource(name);</span>
-<span class="nc bnc" id="L78" title="All 2 branches missed.">    if (resource == null) {</span>
-<span class="nc" id="L79">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' couldn't being found.&quot;, name));</span>
-    }
-    try {
-<span class="nc" id="L82">      return Files.lines(Paths.get(resource.getFile()), cs);</span>
-<span class="nc" id="L83">    } catch (IOException e) {</span>
-<span class="nc" id="L84">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' cound not being read.&quot;, name), e);</span>
-    }
+<span class="nc" id="L67">    return new ResourceLoader(this.classLoader, name, cs.name()).asStream();</span>
   }
 
   public List&lt;String&gt; readAllLines(String name) {
-<span class="nc" id="L89">    URL resource = this.classLoader.getResource(name);</span>
-<span class="nc bnc" id="L90" title="All 2 branches missed.">    if (resource == null) {</span>
-<span class="nc" id="L91">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' couldn't being found.&quot;, name));</span>
-    }
-    try {
-<span class="nc" id="L94">      return Files.readAllLines(Paths.get(resource.getFile()));</span>
-<span class="nc" id="L95">    } catch (IOException e) {</span>
-<span class="nc" id="L96">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' cound not being read.&quot;, name), e);</span>
-    }
+<span class="nc" id="L71">    return new ResourceLoader(this.classLoader, name, &quot;UTF-8&quot;).asList();</span>
   }
 
   public List&lt;String&gt; readAllLines(String name, Charset cs) {
-<span class="nc" id="L101">    URL resource = this.classLoader.getResource(name);</span>
-<span class="nc bnc" id="L102" title="All 2 branches missed.">    if (resource == null) {</span>
-<span class="nc" id="L103">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' couldn't being found.&quot;, name));</span>
-    }
-    try {
-<span class="nc" id="L106">      return Files.readAllLines(Paths.get(resource.getFile()), cs);</span>
-<span class="nc" id="L107">    } catch (IOException e) {</span>
-<span class="nc" id="L108">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' cound not being read.&quot;, name), e);</span>
-    }
+<span class="nc" id="L75">    return new ResourceLoader(this.classLoader, name, cs.name()).asList();</span>
   }
 
   public byte[] readAllBytes(String name) {
-<span class="nc" id="L113">    URL resource = this.classLoader.getResource(name);</span>
-<span class="nc bnc" id="L114" title="All 2 branches missed.">    if (resource == null) {</span>
-<span class="nc" id="L115">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' couldn't being found.&quot;, name));</span>
-    }
-    try {
-<span class="nc" id="L118">      return Files.readAllBytes(Paths.get(resource.getFile()));</span>
-<span class="nc" id="L119">    } catch (IOException e) {</span>
-<span class="nc" id="L120">      throw new ResourceNotFoundException(String.format(&quot;The resource '%s' cound not being read.&quot;, name), e);</span>
-    }
+    //Hint: The given encoding is being ignored, because reading a file as byte
+    //has no encoding.
+<span class="nc" id="L81">    return new ResourceLoader(this.classLoader, name, &quot;UTF-8&quot;).asBytes();</span>
   }
 
 }
