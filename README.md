@@ -120,6 +120,10 @@ class XYZTest {
 ```
 You have to have added junit jupiter dependencies as well.
 
+### Availability
+
+The dependency is available via Central Repository.
+
 ### Building 
 
 If you like to build the project from source yourself you need the following:
