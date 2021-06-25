@@ -28,8 +28,8 @@ Prototype
 # General Overview
 
 If you are writing test often it happens that you need to read a file
-from the `src/test/resources` directory (or be more accurate from `target/test-classes`).
-This results in simply always the same code like this:
+from the `src/test/resources` directory (or to be more accurate from `target/test-classes`).
+The result is simply always the same code:
 
 ```java
 class XYZTest {
@@ -50,7 +50,7 @@ class XYZTest {
 or something similar.
 
 If you do that multiple times you will come up with a utility class and use that.
-Of course, it's easy to write but every time? A bit cumbersome isn't it?
+Of course, it's easy to write but every time in each project? A bit cumbersome isn't it?
 
 There is an easier way just use this extension like the following:
 
@@ -93,7 +93,6 @@ class XYZTest {
   }
   
 }
-
 ```
 # Quick Start
 
@@ -112,7 +111,7 @@ class XYZTest {
     <dependency>
       <groupId>com.soebes.junit.jupiter.extension.resource</groupId>
       <artifactId>resources-extension</artifactId>
-      <version>0.1.0</version>
+      <version>0.2.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
