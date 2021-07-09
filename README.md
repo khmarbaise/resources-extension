@@ -109,7 +109,7 @@ class XYZTest {
   <dependencies>
     ..
     <dependency>
-      <groupId>com.soebes.junit.jupiter.extension.resource</groupId>
+      <groupId>com.soebes.junit.jupiter.extensions.resources</groupId>
       <artifactId>resources-extension</artifactId>
       <version>0.2.0</version>
       <scope>test</scope>
