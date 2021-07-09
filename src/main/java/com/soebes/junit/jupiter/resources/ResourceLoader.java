@@ -48,7 +48,7 @@ class ResourceLoader {
     try {
       return Files.readAllLines(getResourcePath(resource), this.encoding);
     } catch (IOException e) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' could not read.", this.resourceName), e);
+      throw new ResourceNotFoundException(String.format("The resource '%s' could not be found.", this.resourceName), e);
     }
   }
 
@@ -57,7 +57,7 @@ class ResourceLoader {
     try {
       return Files.lines(getResourcePath(resource), this.encoding);
     } catch (IOException e) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' could not read.", this.resourceName), e);
+      throw new ResourceNotFoundException(String.format("The resource '%s' could not be found.", this.resourceName), e);
     }
   }
 
@@ -66,7 +66,7 @@ class ResourceLoader {
     try {
       return new String(Files.readAllBytes(getResourcePath(resource)));
     } catch (IOException e) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' could not read.", this.resourceName), e);
+      throw new ResourceNotFoundException(String.format("The resource '%s' could not be read.", this.resourceName), e);
     }
   }
 
@@ -75,7 +75,7 @@ class ResourceLoader {
     try {
       return Files.readAllBytes(getResourcePath(resource));
     } catch (IOException e) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' could not read.", this.resourceName), e);
+      throw new ResourceNotFoundException(String.format("The resource '%s' could not be read.", this.resourceName), e);
     }
   }
 
@@ -86,7 +86,7 @@ class ResourceLoader {
   private URL getResource(ClassLoader classLoader, String resourceName) {
     URL resource = classLoader.getResource(resourceName);
     if (resource == null) {
-      throw new ResourceNotFoundException(String.format("The resource '%s' could not found.", resourceName));
+      throw new ResourceNotFoundException(String.format("The resource '%s' could not be found.", resourceName));
     }
     return resource;
   }
