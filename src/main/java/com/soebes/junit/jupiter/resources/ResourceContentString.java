@@ -21,8 +21,6 @@ package com.soebes.junit.jupiter.resources;
 
 import org.apiguardian.api.API;
 
-import java.util.List;
-
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 /**

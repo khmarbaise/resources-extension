@@ -36,6 +36,23 @@ import java.util.stream.Stream;
  */
 class TestResourceExtension implements ParameterResolver {
 
+  private enum ParameterType {
+    ResourceContentString(ResourceContentString.class),
+    ResourceContentLines(ResourceContentLines.class),
+    ResourcePath(ResourcePath.class),
+    ResourceFile(ResourceFile.class);
+
+    private Class<?> klass;
+
+    ParameterType(Class<?> klass) {
+      this.klass = klass;
+    }
+
+    Class<?> getKlass() {
+      return klass;
+    }
+  }
+
   @Override
   public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
       throws ParameterResolutionException {
@@ -43,19 +60,22 @@ class TestResourceExtension implements ParameterResolver {
     Parameter parameter = parameterContext.getParameter();
     Class<?> type = parameter.getType();
 
+    //Something like @ResourceRead("sub/anton.txt") Type<A,B> resource) will not work!
     if (type.getTypeParameters().length > 1) {
       return false;
     }
 
     if (type.getTypeParameters().length == 1) {
       Type parameterizedType = parameter.getParameterizedType();
-      Type[] actualTypeArguments = ((ParameterizedType) parameterizedType).getActualTypeArguments();
-      if (actualTypeArguments[0].equals(String.class) && isListOrStream(type)) {
+      Type actualTypeArgument = ((ParameterizedType) parameterizedType).getActualTypeArguments()[0];
+      if (actualTypeArgument.equals(String.class) && isListOrStream(type)) {
         return true;
       }
     }
 
-    if (isResourceContentLine(type) || isResourceContentString(type) || isResourceFile(type) || isResourcePath(type)) {
+    boolean parameterTypes = Stream.of(ParameterType.values())
+        .anyMatch(parameterType -> parameterType.getKlass() == parameterContext.getParameter().getType());
+    if (parameterTypes) {
       return true;
     }
 
@@ -76,7 +96,8 @@ class TestResourceExtension implements ParameterResolver {
 
     ResourceRead annotation = parameterContext.getParameter().getAnnotation(ResourceRead.class);
 
-    if (isString(type) && type.getTypeParameters().length == 0 && hasResourceReadAnnotation(parameterContext.getParameter())) {
+    if (isString(type) && type.getTypeParameters().length == 0 && hasResourceReadAnnotation(
+        parameterContext.getParameter())) {
       return new ResourceLoader(classLoader, annotation.value(), annotation.encoding()).asString();
     }
 
@@ -99,8 +120,8 @@ class TestResourceExtension implements ParameterResolver {
       // @ResourceFileRead("sub/anton.txt") must be present! either as annotation on the method
       // or as annotation on the method parameter.
       Method requiredTestMethod = extensionContext.getRequiredTestMethod();
-      if (!requiredTestMethod.isAnnotationPresent(ResourceRead.class) && !hasResourceReadAnnotation(parameterContext.getParameter())) {
-        // Fail!!!
+      if (!requiredTestMethod.isAnnotationPresent(ResourceRead.class) && !hasResourceReadAnnotation(
+          parameterContext.getParameter())) {
         throw new IllegalStateException("@ResourceRead not given on method nor on method parameter.");
       }
 
@@ -112,7 +133,8 @@ class TestResourceExtension implements ParameterResolver {
       }
 
       if (isResourceContentLine(type) || type.isAnnotationPresent(ResourceRead.class)) {
-        List<String> strings = new ResourceLoader(classLoader, annotationRead.value(), annotationRead.encoding()).asList();
+        List<String> strings = new ResourceLoader(classLoader, annotationRead.value(),
+            annotationRead.encoding()).asList();
         return new ResourceContentLines(strings);
       } else {
         String strings = new ResourceLoader(classLoader, annotationRead.value(), annotationRead.encoding()).asString();
