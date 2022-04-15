@@ -99,7 +99,7 @@ class XYZTest {
 ## The General Requirements
 
 * JDK8+
-* Apache Maven 3.1.0 or above. (I recommend to use Maven 3.8.1)
+* Apache Maven 3.1.0 or above. (I recommend to use Maven 3.8.4)
 
 ## The Maven Configuration
 
